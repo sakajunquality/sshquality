@@ -18,45 +18,47 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package datasources
+package resources
 
 import (
 	"fmt"
-
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/ec2"
+	"os"
+	"os/user"
+	"io/ioutil"
 )
 
-func Ec2ListInstances() {
-	sess, err := session.NewSession()
-	if err != nil {
-		fmt.Printf("failed to create session %v\n", err)
+type Host struct {
+	Name string
+	PrivateIpAddress string
+	PublicIpAddress string
+}
+
+type HostConfig struct {
+	User string
+	UsePublicIp bool
+	Port string
+	IdentityFile string
+}
+
+func WriteSshConfig(hosts []Host, config HostConfig, config_name string) {
+	var config_string string
+
+	for _, host := range hosts {
+		config_string += "Host " + host.Name + "\n"
+		config_string += "  HostName " + host.PrivateIpAddress + "\n"
+		config_string += "  User "+ config.User +"\n"
+		config_string += "  Port "+config.Port+"\n\n"
 	}
 
-	awsRegion := "ap-northeast-1"
-	svc := ec2.New(sess, &aws.Config{Region: aws.String(awsRegion)})
+	content := []byte(config_string)
 
-	res, err := svc.DescribeInstances(nil)
-	if err != nil {
-		fmt.Println("there was an error listing instances in", awsRegion, err.Error())
-	}
+	usr, _ := user.Current()
 
-	for _, r := range res.Reservations {
-		for _, i := range r.Instances {
-			var tag_name string
-			for _, t := range i.Tags {
-				if *t.Key == "Name" {
-					tag_name = *t.Value
-				}
-			}
+	config_dir := usr.HomeDir + "/.ssh/conf.d" 
+    file_name := config_dir +"/"+ config_name+".conf"
 
-			// とりあえず表示してみる
-			fmt.Println(tag_name)
-			fmt.Println(*i.PrivateIpAddress)
-			if i.PublicIpAddress != nil {
-				fmt.Println(*i.PublicIpAddress)
-			}
-		}
-	}
+	os.MkdirAll(config_dir, 0755)
+	ioutil.WriteFile(file_name, content, 0644)
+
+	fmt.Printf("created ssh config to %s\n", file_name)
 }
