@@ -40,7 +40,7 @@ Installation
 ### src
 
 ```bash
-$ go isntall github.com/sakajunquality/sshquality
+$ go install github.com/sakajunquality/sshquality
 ```
 
 
