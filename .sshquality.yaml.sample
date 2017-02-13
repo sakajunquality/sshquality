@@ -1,0 +1,5 @@
+---
+clouds:
+  1:
+    type: ec2
+    name: aws
