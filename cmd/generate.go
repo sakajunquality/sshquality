@@ -22,7 +22,18 @@ var generateCmd = &cobra.Command{
 			var config resources.HostConfig
 
 			if cc["type"] == "ec2" {
-				hosts = datasources.GetEc2Instances()
+				// default
+				region := datasources.EC2DefaultRegion
+				credential := datasources.EC2DefaultCredential
+
+				if cc["region"] != nil {
+					region, _ = cc["region"].(string)
+				}
+				if cc["credential"] != nil {
+					credential, _ = cc["credential"].(string)
+				}
+
+				hosts = datasources.GetEc2Instances(credential, region)
 				config = *datasources.GetEc2DefaultConfig()
 			} else {
 				continue
@@ -31,6 +42,16 @@ var generateCmd = &cobra.Command{
 			// TODO: order alphabetically
 
 			config_name, _ := cc["name"].(string)
+			add_prefix, _ := cc["add_prefix"].(bool)
+			use_public_ip, _ := cc["use_public_ip"].(bool)
+
+			if use_public_ip {
+				config.UsePublicIp = true
+			}
+
+			if add_prefix {
+				config.AddPrefix = true
+			}
 
 			resources.WriteEachConfig(hosts, config, config_name)
 		}

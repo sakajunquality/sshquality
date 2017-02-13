@@ -18,6 +18,7 @@ type HostConfig struct {
 	User         string
 	UsePublicIp  bool
 	Port         string
+	AddPrefix    bool
 	IdentityFile string
 }
 
@@ -36,12 +37,23 @@ func InitSshQuality() {
 	exec.Command("cp", "-a", ssh_dir+"/config", ssh_dir+"/config.save").Run()
 }
 
-func WriteEachConfig(hosts []Host, config HostConfig, config_name string) {
+func WriteEachConfig(hosts []Host, config HostConfig, configName string) {
 	var config_string string
 
 	for _, host := range hosts {
-		config_string += "Host " + host.Name + "\n"
-		config_string += "  HostName " + host.PrivateIpAddress + "\n"
+
+		if config.AddPrefix {
+			config_string += "Host " + configName + "-" + host.Name + "\n"
+		} else {
+			config_string += "Host " + host.Name + "\n"
+		}
+
+		if config.UsePublicIp && host.PublicIpAddress != "" {
+			config_string += "  HostName " + host.PublicIpAddress + "\n"
+		} else {
+			config_string += "  HostName " + host.PrivateIpAddress + "\n"
+		}
+
 		config_string += "  User " + config.User + "\n"
 		config_string += "  Port " + config.Port + "\n\n"
 	}
@@ -51,7 +63,7 @@ func WriteEachConfig(hosts []Host, config HostConfig, config_name string) {
 	usr, _ := user.Current()
 
 	config_dir := usr.HomeDir + "/.ssh/conf.d"
-	file_name := config_dir + "/" + config_name + ".conf"
+	file_name := config_dir + "/" + configName + ".conf"
 
 	ioutil.WriteFile(file_name, content, 0644)
 
