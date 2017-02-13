@@ -4,20 +4,27 @@ import (
 	"fmt"
 
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
+
 	"github.com/aws/aws-sdk-go/service/ec2"
 
 	"github.com/sakajunquality/sshquality/resources"
 )
 
-func GetEc2Instances() []resources.Host {
+const EC2DefaultRegion = "ap-northeast-1"
+const EC2DefaultCredential = "default"
+
+func GetEc2Instances(awsCredential string, awsRegion string) []resources.Host {
 	sess, err := session.NewSession()
 	if err != nil {
 		fmt.Printf("failed to create session %v\n", err)
 	}
 
-	awsRegion := "ap-northeast-1"
-	svc := ec2.New(sess, &aws.Config{Region: aws.String(awsRegion)})
+	svc := ec2.New(sess, &aws.Config{
+		Credentials: credentials.NewSharedCredentials("", awsCredential),
+		Region:      aws.String(awsRegion),
+	})
 
 	res, err := svc.DescribeInstances(nil)
 	if err != nil {
