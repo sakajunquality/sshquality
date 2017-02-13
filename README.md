@@ -5,36 +5,32 @@ sshquality
 
 Overview
 ------------
-SSH config manager for cloud. This CLI app will create individual ssh config (you can add manual config too), and combine them into one file `~/.ssh/config`.
-
-
+SSH config manager for cloud, like AWS. This app will create individual ssh config (you can add manual config too), and combine them into one file `~/.ssh/config`.
 
 ### Naive Idea
 
-Organize and keep `~/.ssh` directory clean.
+Organize ssh configs, generated both manually and automatically, and keep `~/.ssh` directory clean.
+
+#### Example
 
 ```
 ~/.ssh
 ├── conf.d
-│   ├── 000-manual.conf
-│   ├── aws.conf
-│   ├── aws-2.conf
-│   └── gcp.conf
-├── config
+│   ├── 000-manual.conf // manual
+│   ├── aws.conf // auto
+│   ├── aws-2.conf // auto
+│   └── gcp.conf // auto
+├── config // all the configs in conf.d are combined
 └── keys
     ├── id_rsa
     └── id_rsa.pub
 ```
 
-
-
 #### SupportedPlatform
-- AWS EC2 (single account and single region only....)
+- AWS EC2
+- GCP (Upcoming)
+- Azure (Upcoming)
 
-
-
-
-Multiple accounts and regions will be implemented
 
 
 
@@ -53,12 +49,14 @@ $ go isntall github.com/sakajunquality/sshquality
 
 upcoming.....
 
-
-
 Usage
 ------------
 
 ### config file (~/.sshquality.yaml)
+
+First you need to create config file for the app. The file must be located at your home directory and named ".sshquality.yaml".
+
+#### Config Example
 
 ```yaml
 ---
@@ -78,7 +76,7 @@ clouds:
     use_public_ip: true
 ```
 
-#### config
+#### config details
 
 | name          | accepted value                     | default        | mandatory |
 | ------------- | ---------------------------------- | -------------- | --------- |
@@ -91,10 +89,42 @@ clouds:
 
 
 
-### init & generate .ssh/config
+### Init
+
+By the command `init`, the app will create necessary directories and files.
 
 ```bash
 $ sshquality init
+```
+
+
+
+### Manual Configuretion
+
+After initilization, you can add some manual configs. 
+
+#### Example
+
+```
+// ~/.ssh/conf.d/000-manual.conf
+
+Host *
+  forwardagent yes
+  
+Host my-personal-server
+   hostname test.domain.local
+   user hello
+```
+
+
+
+### Generate
+
+Finally generate the `~/.ssh/config`
+
+**Note:** This will override your `~/.ssh/config`.
+
+```bash
 $ sshquality generate
 ```
 
