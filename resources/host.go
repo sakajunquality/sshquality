@@ -55,7 +55,13 @@ func WriteEachConfig(hosts []Host, config HostConfig, configName string) {
 		}
 
 		config_string += "  User " + config.User + "\n"
-		config_string += "  Port " + config.Port + "\n\n"
+		config_string += "  Port " + config.Port + "\n"
+
+		if config.IdentityFile != "" {
+			config_string += "  IdentityFile " + config.IdentityFile + "\n"
+		}
+
+		config_string += "\n"
 	}
 
 	content := []byte(config_string)
