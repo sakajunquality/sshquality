@@ -32,8 +32,10 @@ var generateCmd = &cobra.Command{
 
 			config_name, _ := cc["name"].(string)
 
-			resources.WriteSshConfig(hosts, config, config_name)
+			resources.WriteEachConfig(hosts, config, config_name)
 		}
+
+		resources.WriteSshConfig()
 	},
 }
 
