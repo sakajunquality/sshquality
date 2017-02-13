@@ -29,26 +29,51 @@ Organize and keep `~/.ssh` directory clean.
 
 
 #### SupportedPlatform
-- AWS EC2
+- AWS EC2 (single account and single region only....)
+
+
+
+
+Multiple accounts and regions will be implemented
+
 
 
 Installation
 ------------
 
+### src
+
+```bash
+$ go isntall github.com/sakajunquality/sshquality
+```
+
+
+
 ### homebrew
 
 upcoming.....
-
-### src
-
-upcoming...
 
 
 
 Usage
 ------------
 
-upcoming.....
+### config file (~/.sshquality.yaml)
+
+```yaml
+---
+clouds:
+  1:
+    type: ec2
+    name: aws
+```
+
+### init & generate .ssh/config
+
+```bash
+$ sshquality init
+$ sshquality generate
+```
 
 
 
@@ -66,11 +91,11 @@ sssh() { ## whatever the name is
 }
 ```
 
-
-
 ### peco (+zsh)
 
 upcoming...
+
+
 
 
 Contributing
