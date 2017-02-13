@@ -14,6 +14,7 @@ import (
 
 const EC2DefaultRegion = "ap-northeast-1"
 const EC2DefaultCredential = "default"
+const EC2DefaultUser = "ec2-user"
 
 func GetEc2Instances(awsCredential string, awsRegion string) []resources.Host {
 	sess, err := session.NewSession()
@@ -60,5 +61,5 @@ func GetEc2Instances(awsCredential string, awsRegion string) []resources.Host {
 }
 
 func GetEc2DefaultConfig() *resources.HostConfig {
-	return &resources.HostConfig{User: "ec2-user", UsePublicIp: false, Port: "22"}
+	return &resources.HostConfig{User: EC2DefaultUser, UsePublicIp: false, Port: "22"}
 }

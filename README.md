@@ -34,6 +34,7 @@ Organize ssh configs, generated both manually and automatically, and keep `~/.ss
 
 
 
+
 Installation
 ------------
 
@@ -48,6 +49,7 @@ $ go install github.com/sakajunquality/sshquality
 ### homebrew
 
 upcoming.....
+
 
 Usage
 ------------
@@ -86,6 +88,8 @@ clouds:
 | region        | AWS region                         | ap-northeast-1 | No        |
 | add_prefix    | bool                               | false          | No        |
 | use_public_ip | bool                               | false          | No        |
+| default_user  | any string                         | `ec2-user`     | no        |
+| default_key   | any string                         | -              | No        |
 
 
 

@@ -42,6 +42,8 @@ var generateCmd = &cobra.Command{
 			// TODO: order alphabetically
 
 			config_name, _ := cc["name"].(string)
+			default_user, _ := cc["default_user"].(string)
+			default_key, _ := cc["default_key"].(string)
 			add_prefix, _ := cc["add_prefix"].(bool)
 			use_public_ip, _ := cc["use_public_ip"].(bool)
 
@@ -51,6 +53,18 @@ var generateCmd = &cobra.Command{
 
 			if add_prefix {
 				config.AddPrefix = true
+			}
+
+			if add_prefix {
+				config.AddPrefix = true
+			}
+
+			if default_user != "" {
+				config.User = default_user
+			}
+
+			if default_key != "" {
+				config.IdentityFile = default_key
 			}
 
 			resources.WriteEachConfig(hosts, config, config_name)
