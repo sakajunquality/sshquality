@@ -3,3 +3,13 @@ clouds:
   1:
     type: ec2
     name: aws
+    credential: default
+    region: ap-northeast-1
+    add_prefix: false
+  2:
+    type: ec2
+    name: another-aws
+    credential: cred2
+    region: ap-northeast-1
+    add_prefix: true
+    use_public_ip: true

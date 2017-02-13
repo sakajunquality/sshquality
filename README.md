@@ -66,7 +66,30 @@ clouds:
   1:
     type: ec2
     name: aws
+    credential: default
+    region: ap-northeast-1
+    add_prefix: false
+  2:
+    type: ec2
+    name: another-aws
+    credential: cred2
+    region: us-east-1
+    add_prefix: true
+    use_public_ip: true
 ```
+
+#### config
+
+| name          | accepted value                     | default        | mandatory |
+| ------------- | ---------------------------------- | -------------- | --------- |
+| type          | `ec2`                              | -              | Yes       |
+| name          | any string                         | -              | Yes       |
+| credential    | any string (See ~/.aws/credential) | default        | No        |
+| region        | AWS region                         | ap-northeast-1 | No        |
+| add_prefix    | bool                               | false          | No        |
+| use_public_ip | bool                               | false          | No        |
+
+
 
 ### init & generate .ssh/config
 
