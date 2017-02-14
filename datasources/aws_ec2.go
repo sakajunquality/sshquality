@@ -47,7 +47,12 @@ func GetEc2Instances(awsCredential string, awsRegion string) []resources.Host {
 				}
 			}
 
+			// ignore terminated instances
+			if i.PrivateIpAddress == nil {
+				continue
+			}
 			private_ip_address = *i.PrivateIpAddress
+
 			if i.PublicIpAddress != nil {
 				public_ip_address = *i.PublicIpAddress
 			}
